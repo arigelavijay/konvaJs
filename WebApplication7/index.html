@@ -1,0 +1,79 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.rawgit.com/konvajs/konva/2.1.6/konva.min.js"></script>
+    <meta charset="utf-8">
+    <title>Konva Animate Position Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #F0F0F0;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script>
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+
+        var stage = new Konva.Stage({
+            container: 'container',
+            width: width,
+            height: height
+        });
+
+        var layer = new Konva.Layer();
+
+        var hexagon = new Konva.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            sides: 6,
+            radius: 20,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(hexagon);
+        stage.add(layer);
+
+        var Xamplitude = 50;
+        var Yamplitude = 600;
+        var Ytemp = Yamplitude;
+        var Xtemp = Xamplitude;
+        var height = 600;
+        var separation = 350;
+        var period = 2000;
+        // in ms 50, 600
+        var centerX = stage.getWidth() / 2;
+        var array = [{ x: 51, y: 590 }, { x: 52, y: 580 }, { x: 53, y: 570 }, { x: 54, y: 540 }, { x: 55, y: 530 }, { x: 56, y: 520 }, { x: 56, y: 490 }];
+        var i = 0;
+        var rSqure = Math.pow(600, 2);
+        var anim = new Konva.Animation(function (frame) {
+            //i = i + 1;
+            Xamplitude = Xamplitude + 1;
+            //Yamplitude = ((4 * height * Xamplitude) / separation) - ((4 * height * Xamplitude) / (separation * separation));
+            //Yamplitude = temp - (Xamplitude * 4);
+            //Yamplitude = (Math.sqrt((500 * 500) - (Xamplitude * Xamplitude)))
+            //Yamplitude = (3 * Xamplitude * Xamplitude) + (12 * Xamplitude) + 1
+            //var tempY = (Xamplitude * Xamplitude) + Xamplitude;
+            //Yamplitude = Yamplitude - 3;
+            var y = rSqure - Math.pow(Xamplitude, 2);
+            Yamplitude = Math.sqrt(y);
+            console.log('x:' + Xamplitude + ' y:' + Yamplitude);
+            //Yamplitude = Yamplitude - 1;
+            //var xPosition = amplitude;// * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
+            //console.log(xPosition)
+            hexagon.setX(Xamplitude);
+            hexagon.setY(Yamplitude);
+        }, layer);
+
+        anim.start();
+    </script>
+
+</body>
+</html>
