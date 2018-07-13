@@ -53,8 +53,18 @@
             }
         }
 
-        function GetPercentage(oldHt, newHt) {
+        function GetPercentage(oldHt, oldWt, newHt, newWt) {
+            var oldArea = oldHt * oldWt;
+            var newArea = newHt * newWt;
+            var diff = 0;
+            if (oldArea > newArea)
+                diff = oldArea - newArea;
+            else
+                diff = newArea - oldArea;
 
+            var per = (diff / oldArea) * 100;
+
+            return per;
         }
 
         var width = window.innerWidth;
@@ -77,14 +87,18 @@
             image: image,
             //x: 650,
             //y: 650,
-            width: 1600,
-            height: 600,
+            width: 1350,
+            height: 500,
             listening: false
-        });        
+        });   
 
+        var nWidth = imgObj.getWidth();
+        var nHeight = imgObj.getHeight();
+        var increasePer = GetPercentage(oHeight, oWidth, nHeight, nWidth);
+        debugger;
         var ballObj = new Konva.Circle({
             sides: 6,
-            radius: 10,
+            radius: increasePer == 0 ? 2 : ((increasePer * 2)/100),
             fill: 'red',
             stroke: 'black',
             strokeWidth: 4,
@@ -106,7 +120,7 @@
         var imgX = imgObj.attrs.x == undefined ? 0 : imgObj.attrs.x;
         var imgY = imgObj.attrs.y == undefined ? 0 : imgObj.attrs.y;        
 
-        let parabola = new Parabola(imgX, imgY + imgObj.getHeight(), imgX + imgObj.getWidth() / 2, imgY, imgX + imgObj.getWidth(), imgY + imgObj.getHeight());
+        let parabola = new Parabola(imgX, imgY + nHeight, imgX + nWidth / 2, imgY, imgX + nWidth, imgY + nHeight);
         var constants = parabola.Compute();
         
         var Xamplitude = imgX;        
