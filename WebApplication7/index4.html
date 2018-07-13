@@ -1,0 +1,129 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.rawgit.com/konvajs/konva/2.1.6/konva.min.js"></script>
+    <meta charset="utf-8">
+    <title>Konva Animate Position Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #F0F0F0;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script>       
+        
+        class Parabola {
+            constructor(x1, y1, x2, y2, x3, y3) {
+                this.x1 = x1;
+                this.y1 = y1;
+                this.x2 = x2;
+                this.y2 = y2;
+                this.x3 = x3;
+                this.y3 = y3;
+            }
+
+            Compute() {
+                let A1 = -(Math.pow(this.x1, 2)) + Math.pow(this.x2, 2);
+                let B1 = -this.x1 + this.x2;
+                let D1 = -this.y1 + this.y2;
+
+                let A2 = -(Math.pow(this.x2, 2)) + (Math.pow(this.x3, 2));
+                let B2 = -this.x2 + this.x3;
+                let D2 = -this.y2 + this.y3;
+
+                let B_multiplier = -(B2 / B1);
+                let A3 = B_multiplier * A1 + A2;
+                let D3 = B_multiplier * D1 + D2;
+
+                let a = D3 / A3;
+                let b = (D1 - A1 * a) / B1;
+                let c = this.y1 - a * Math.pow(this.x1, 2) - b * this.x1;
+
+                return {
+                    a: a,
+                    b: b,
+                    c: c
+                }
+            }
+        }
+
+        function GetPercentage(oldHt, newHt) {
+
+        }
+
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+
+        var stage = new Konva.Stage({
+            container: 'container',
+            width: width,
+            height: height
+        });
+
+        var image = new Image();
+        image.src = 'https://www.marathonbet.com/cdn/3-0-629/js/liveanimation/volleyball/images/field.png';
+        image.alt = 'Image';
+
+        var oWidth = image.width;
+        var oHeight = image.height;        
+        
+        let imgObj = new Konva.Image({
+            image: image,
+            //x: 650,
+            //y: 650,
+            width: 1600,
+            height: 600,
+            listening: false
+        });        
+
+        var ballObj = new Konva.Circle({
+            sides: 6,
+            radius: 10,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4,
+            fillPatternImage: imgObj
+        });
+
+        var layer = new Konva.Layer();
+
+        layer.add(imgObj);
+        layer.add(ballObj);        
+        stage.add(layer);
+
+        //var offsetHeight = layer.children[0].attrs.image.offsetHeight;
+        //var offsetLeft = layer.children[0].attrs.image.offsetLeft;
+        //var offsetTop = layer.children[0].attrs.image.offsetTop;
+        //var offsetWidth = layer.children[0].attrs.image.offsetWidth;
+        //debugger;
+
+        var imgX = imgObj.attrs.x == undefined ? 0 : imgObj.attrs.x;
+        var imgY = imgObj.attrs.y == undefined ? 0 : imgObj.attrs.y;        
+
+        let parabola = new Parabola(imgX, imgY + imgObj.getHeight(), imgX + imgObj.getWidth() / 2, imgY, imgX + imgObj.getWidth(), imgY + imgObj.getHeight());
+        var constants = parabola.Compute();
+        
+        var Xamplitude = imgX;        
+        var a = constants.a;
+        var b = constants.b;
+        var c = constants.c;
+        
+        var anim = new Konva.Animation(function (frame) {
+            Xamplitude = Xamplitude + 5;
+            Yamplitude = a * Math.pow(Xamplitude, 2) + b * Xamplitude + c;
+            console.log('x:' + Xamplitude + ' y:' + Yamplitude);
+            ballObj.setX(Xamplitude);
+            ballObj.setY(Yamplitude);
+        }, layer);
+
+        anim.start();
+    </script>
+
+</body>
+</html>

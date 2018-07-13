@@ -1,0 +1,83 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.rawgit.com/konvajs/konva/2.1.7/konva.min.js"></script>
+    <meta charset="utf-8">
+    <title>Konva Circle Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #F0F0F0;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="container"></div>
+    <script>
+        var width = window.innerWidth; // 1920
+        var height = window.innerHeight; // 541
+        
+        var stage = new Konva.Stage({
+            container: 'container',
+            width: width,
+            height: height
+        });
+
+        var layer = new Konva.Layer();
+
+        
+        var circle = new Konva.Circle({
+            x: stage.getWidth() / 8,
+            y: stage.getHeight() / 8,
+            radius: 20,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 2,
+            fillLinearGradientStartPoint: { x: 0 },
+            fillLinearGradientEndPoint: { x: 140 * 10 },
+            fillLinearGradientColorStops: [0, '#FFF', 1, 'rgba(255,255,255, 0)'],
+        });
+        
+        var imageObj = new Image();        
+        imageObj.src = 'https://www.marathonbet.com/cdn/3-0-629/js/liveanimation/volleyball/images/field.png';
+        imageObj.alt = 'Image';
+        let field = new Konva.Image({
+            image: imageObj,
+            //x: 5,
+            //y: 5,
+            //width: 550,
+            //height: 300,
+            listening: false
+        })
+
+        var imgHeight = field.getHeight();
+        var imgWeight = field.getWidth();
+        debugger;
+
+        layer.add(field); // first add field, on top of it add circle
+        layer.add(circle);        
+
+        stage.add(layer);        
+        
+
+        var amplitudex = imgWeight; //increase area covered
+        var amplitudey = imgHeight; // max height covered
+        var period = 7000; // speed of the ball, inversly propotional
+        var anim = new Konva.Animation(function (frame) {
+            var centerX = stage.getWidth() / 2;
+            var centerY = stage.getHeight() / 2; //postion of animation on y-axis
+
+            centerX = 900; //postion of animation on x-axis
+            circle.setX((amplitudex * Math.cos(frame.time * (2) * Math.PI / period)) + centerX);
+            circle.setY((amplitudey * Math.cos(frame.time * (-4) * Math.PI / period)) + centerY);
+        }, layer);
+
+        anim.start();
+    </script>
+
+</body>
+</html>
